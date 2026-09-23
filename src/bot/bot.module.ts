@@ -4,9 +4,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BotUpdate } from './bot.update.js';
 import { BotService } from './bot.service.js';
 import { BullModule } from '@nestjs/bullmq';
+import { AdModule } from '../ad/ad.module.js';
+import { PrismaModule } from '../prisma/prisma.module.js';
 
 @Module({
   imports: [
+    PrismaModule,
+    AdModule,
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
