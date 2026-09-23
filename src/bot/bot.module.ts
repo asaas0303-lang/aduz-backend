@@ -13,9 +13,32 @@ import { PrismaModule } from '../prisma/prisma.module.js';
     AdModule,
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        token: configService.get<string>('TELEGRAM_BOT_TOKEN') || 'DUMMY_TOKEN',
-      }),
+      useFactory: (configService: ConfigService) => {
+        const token = configService.get<string>('TELEGRAM_BOT_TOKEN');
+        if (!token || token === 'DUMMY_TOKEN') {
+          throw new Error('TELEGRAM_BOT_TOKEN is missing! Please configure it in Railway.');
+        }
+
+        const domain = configService.get<string>('RAILWAY_PUBLIC_DOMAIN');
+        if (domain) {
+          return {
+            token,
+            launchOptions: {
+              webhook: {
+                domain: `https://${domain}`,
+                hookPath: '/telegraf-webhook',
+              },
+            },
+          };
+        }
+
+        return {
+          token,
+          launchOptions: {
+            dropPendingUpdates: true,
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     BullModule.registerQueue({
