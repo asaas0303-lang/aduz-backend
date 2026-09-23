@@ -9,7 +9,7 @@ export class WalletService {
     return this.prisma.$transaction(async (tx) => {
       const user = await tx.user.findUnique({ where: { id: userId } });
       if (!user || user.walletBalance < amount) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException('Balans yetarli emas');
       }
 
       await tx.user.update({
@@ -31,7 +31,7 @@ export class WalletService {
   async payoutToChannelOwner(channelId: string, amount: number, relatedAdId: string) {
     return this.prisma.$transaction(async (tx) => {
       const channel = await tx.channel.findUnique({ where: { id: channelId } });
-      if (!channel) throw new BadRequestException('Channel not found');
+      if (!channel) throw new BadRequestException('Kanal topilmadi');
 
       const owner = await tx.user.update({
         where: { id: channel.ownerId },

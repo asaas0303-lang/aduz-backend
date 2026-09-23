@@ -22,10 +22,10 @@ export class BotUpdate {
     await this.botService.findOrCreateUser(telegramId, username);
 
     await ctx.reply(
-      'Welcome to ADUZ - Telegram Advertising Marketplace! 🚀\n\nPlease select your role:',
+      'ADUZ - Telegram reklama bozoriga xush kelibsiz! \ud83d\ude80\n\nIltimos, rolingizni tanlang:',
       Markup.inlineKeyboard([
-        Markup.button.callback('📢 Advertiser', 'role_advertiser'),
-        Markup.button.callback('📺 Channel Owner', 'role_channel_owner'),
+        Markup.button.callback('\ud83d\udce2 Reklama beruvchi', 'role_advertiser'),
+        Markup.button.callback('\ud83d\udcfa Kanal egasi', 'role_channel_owner'),
       ])
     );
   }
@@ -37,7 +37,7 @@ export class BotUpdate {
     
     await this.botService.setUserRole(telegramId, 'ADVERTISER');
     await ctx.reply(
-      'You are now registered as an Advertiser! 📢\n\nYou have received a starting balance of 1,000,000 UZS.\n\nUse /create_ad to submit a new ad.'
+      'Siz endi Reklama beruvchi sifatida ro\'yxatdan o\'tdingiz! \ud83d\udce2\n\nSizga 1,000,000 UZS boshlang\'ich balans berildi.\n\nYangi reklama yuborish uchun /create_ad buyrug\'idan foydalaning.'
     );
   }
 
@@ -48,7 +48,7 @@ export class BotUpdate {
 
     await this.botService.setUserRole(telegramId, 'CHANNEL_OWNER');
     await ctx.reply(
-      'You are now registered as a Channel Owner! 📺\n\nTo add your channel to the marketplace, simply add this bot to your channel as an Administrator. The bot will automatically verify and register your channel.'
+      'Siz endi Kanal egasi sifatida ro\'yxatdan o\'tdingiz! \ud83d\udcfa\n\nKanalingizni bozorga qo\'shish uchun, shunchaki ushbu botni kanalingizga Administrator sifatida qo\'shing. Bot kanalingizni avtomatik ravishda tekshiradi va ro\'yxatdan o\'tkazadi.'
     );
   }
 
@@ -70,7 +70,7 @@ export class BotUpdate {
         // Notify the owner
         await ctx.telegram.sendMessage(
           ownerId,
-          `✅ Successfully registered channel: **${channelTitle}**.\n\nYou can now manage its pricing and empty slots.`
+          `✅ Kanal muvaffaqiyatli ro'yxatdan o'tkazildi: **${channelTitle}**.\n\nEndi uning narxlarini va bo'sh o'rinlarini boshqarishingiz mumkin.`
         );
       } catch (error) {
         console.error('Failed to register channel', error);
@@ -85,13 +85,13 @@ export class BotUpdate {
 
     const user = await this.prisma.user.findUnique({ where: { telegramId } });
     if (!user || user.role !== 'ADVERTISER') {
-      return ctx.reply('You must be an ADVERTISER to create an ad.');
+      return ctx.reply('Reklama yaratish uchun siz REKLAMA BERUVCHI bo\'lishingiz kerak.');
     }
 
     const message = (ctx.message as any).text;
     const parts = message.split('|');
     if (parts.length < 3) {
-      return ctx.reply('Usage: /create_ad | <channelId> | <Your ad content here>');
+      return ctx.reply('Foydalanish: /create_ad | <Kanal_ID> | <Reklama matni>');
     }
 
     const channelId = parts[1].trim();
@@ -99,9 +99,9 @@ export class BotUpdate {
 
     try {
       const ad = await this.adService.createAdCampaign(telegramId, channelId, content);
-      await ctx.reply(`✅ Ad campaign created successfully! (ID: ${ad.id}).\n\nYour funds are in escrow pending moderation.`);
+      await ctx.reply(`✅ Reklama kampaniyasi muvaffaqiyatli yaratildi! (ID: ${ad.id}).\n\nMablag'laringiz moderatsiya qilinguncha band qilib qo'yildi.`);
     } catch (error: any) {
-      await ctx.reply(`❌ Failed to create ad: ${error.message}`);
+      await ctx.reply(`❌ Reklama yaratishda xatolik: ${error.message}`);
     }
   }
 
@@ -112,13 +112,13 @@ export class BotUpdate {
 
     const user = await this.prisma.user.findUnique({ where: { telegramId } });
     if (!user || user.role !== 'ADMIN') {
-      return ctx.reply('Unauthorized. Admin only.');
+      return ctx.reply('Ruxsat etilmagan. Faqat adminlar uchun.');
     }
 
     const message = (ctx.message as any).text;
     const parts = message.split(' ');
     if (parts.length < 3) {
-      return ctx.reply('Usage: /moderate <adId> <APPROVE|REJECT>');
+      return ctx.reply('Foydalanish: /moderate <ad_ID> <APPROVE|REJECT>');
     }
 
     const adId = parts[1];
@@ -126,9 +126,9 @@ export class BotUpdate {
 
     try {
       await this.adService.moderateAd(adId, action);
-      await ctx.reply(`✅ Ad ${adId} moderated as ${action}.`);
+      await ctx.reply(`✅ ${adId}-IDli reklama ${action} sifatida moderatsiya qilindi.`);
     } catch (error: any) {
-      await ctx.reply(`❌ Failed to moderate ad: ${error.message}`);
+      await ctx.reply(`❌ Reklamani moderatsiya qilishda xatolik: ${error.message}`);
     }
   }
 }

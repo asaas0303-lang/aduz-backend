@@ -14,10 +14,10 @@ export class AdService {
 
   async createAdCampaign(advertiserTelegramId: string, channelId: string, content: string) {
     const user = await this.prisma.user.findUnique({ where: { telegramId: advertiserTelegramId } });
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new BadRequestException('Foydalanuvchi topilmadi');
 
     const channel = await this.prisma.channel.findUnique({ where: { id: channelId } });
-    if (!channel || !channel.isActive) throw new BadRequestException('Channel not available');
+    if (!channel || !channel.isActive) throw new BadRequestException('Kanal mavjud emas');
 
     // Deduct from escrow
     const ad = await this.prisma.adCampaign.create({
@@ -35,7 +35,7 @@ export class AdService {
 
   async moderateAd(adId: string, action: 'APPROVE' | 'REJECT', scheduledFor?: Date) {
     const ad = await this.prisma.adCampaign.findUnique({ where: { id: adId }, include: { channel: true, advertiser: true } });
-    if (!ad) throw new BadRequestException('Ad not found');
+    if (!ad) throw new BadRequestException('Reklama topilmadi');
 
     if (action === 'REJECT') {
       // Refund wallet
