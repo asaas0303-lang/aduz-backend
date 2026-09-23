@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { AdProcessor } from './ad.processor';
-import { WalletModule } from '../wallet/wallet.module';
+import { AdProcessor } from './ad.processor.js';
+import { WalletModule } from '../wallet/wallet.module.js';
 
 @Module({
   imports: [

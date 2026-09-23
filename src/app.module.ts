@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
-import { PrismaModule } from './prisma/prisma.module';
-import { BotModule } from './bot/bot.module';
-import { AdModule } from './ad/ad.module';
-import { WalletModule } from './wallet/wallet.module';
-import { QueueModule } from './queue/queue.module';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { BotModule } from './bot/bot.module.js';
+import { AdModule } from './ad/ad.module.js';
+import { WalletModule } from './wallet/wallet.module.js';
+import { QueueModule } from './queue/queue.module.js';
 
 @Module({
   imports: [

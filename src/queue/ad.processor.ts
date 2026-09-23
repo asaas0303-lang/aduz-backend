@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { PrismaService } from '../prisma/prisma.service';
-import { WalletService } from '../wallet/wallet.service';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { WalletService } from '../wallet/wallet.service.js';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 

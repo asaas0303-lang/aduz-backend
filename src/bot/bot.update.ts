@@ -1,8 +1,8 @@
 import { Update, Start, Action, On, Ctx, Command } from 'nestjs-telegraf';
 import { Context, Markup } from 'telegraf';
-import { BotService } from './bot.service';
-import { AdService } from '../ad/ad.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { BotService } from './bot.service.js';
+import { AdService } from '../ad/ad.service.js';
+import { PrismaService } from '../prisma/prisma.service.js';
 
 @Update()
 export class BotUpdate {

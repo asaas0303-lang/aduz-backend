@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { WalletService } from './wallet.service';
+import { WalletService } from './wallet.service.js';
 
 @Module({
   providers: [WalletService],

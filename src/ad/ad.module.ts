@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AdService } from './ad.service';
-import { WalletModule } from '../wallet/wallet.module';
+import { AdService } from './ad.service.js';
+import { WalletModule } from '../wallet/wallet.module.js';
 import { BullModule } from '@nestjs/bullmq';
 
 @Module({

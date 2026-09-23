@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { WalletService } from '../wallet/wallet.service';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { WalletService } from '../wallet/wallet.service.js';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
