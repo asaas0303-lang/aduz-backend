@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADVERTISER
+  CHANNEL_OWNER
+  ADMIN
+}
+
+enum AdStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SCHEDULED
+  COMPLETED
+}
+
+enum TransactionType {
+  ESCROW
+  PAYOUT
+  DEPOSIT
+}
+
+model User {
+  id            String   @id @default(uuid())
+  telegramId    String   @unique
+  username      String?
+  role          Role     @default(ADVERTISER)
+  walletBalance Float    @default(1000000) // Dummy UZS balance, default for advertisers
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  channels      Channel[]
+  ads           AdCampaign[]
+  transactions  Transaction[]
+}
+
+model Channel {
+  id             String   @id @default(uuid())
+  ownerId        String
+  owner          User     @relation(fields: [ownerId], references: [id])
+  telegramChatId String   @unique
+  name           String
+  price          Float    @default(0)
+  slots          Int      @default(0)
+  isActive       Boolean  @default(false) // Set true when bot is admin
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ads            AdCampaign[]
+}
+
+model AdCampaign {
+  id           String   @id @default(uuid())
+  advertiserId String
+  advertiser   User     @relation(fields: [advertiserId], references: [id])
+  channelId    String
+  channel      Channel  @relation(fields: [channelId], references: [id])
+  content      String   // Text or JSON string for media
+  category     String?
+  status       AdStatus @default(PENDING)
+  scheduledFor DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id           String          @id @default(uuid())
+  userId       String
+  user         User            @relation(fields: [userId], references: [id])
+  amount       Float
+  type         TransactionType
+  relatedAdId  String?
+  relatedAd    AdCampaign?     @relation(fields: [relatedAdId], references: [id])
+  createdAt    DateTime        @default(now())
+}
